@@ -1,0 +1,33 @@
+# ~/.tmuxinator/APP_NAME.yml
+
+name: APP_NAME
+root: ~/projects/dev/APP_NAME
+
+# Optional tmux socket
+# socket_name: foo
+
+# Runs before everything. Use it to start daemons etc.
+# pre: sudo /etc/rc.d/mysqld start
+
+# Runs in each window and pane before window/pane specific commands. Useful for setting up interpreter versions.
+# pre_window: rbenv shell 2.0.0-p247
+pre_window: export PHP_PATH=`phpenv which php`; phpenv shell 5.6.21
+
+# Pass command line options to tmux. Useful for specifying a different tmux.conf.
+# tmux_options: -f ~/.tmux.mac.conf
+
+# Change the command to call tmux.  This can be used by derivatives/wrappers like byobu.
+# tmux_command: byobu
+
+windows:
+  - logs:
+      layout: tiled
+      panes:
+        - fuel tail
+  - editor:
+      layout: tiled
+      panes:
+        - mysql -u DB_USER -p DB_NAME
+        - phpenv exec php oil console
+        - phpenv exec php vendor/bin/robo watchapp
+        - source ~/.zshrc
